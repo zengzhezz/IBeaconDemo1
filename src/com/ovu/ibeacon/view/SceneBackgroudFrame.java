@@ -46,7 +46,6 @@ public class SceneBackgroudFrame extends JFrame{
 		setBackground(Color.BLUE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		isResizable();
 	}
 
 }

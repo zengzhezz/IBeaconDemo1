@@ -2,7 +2,6 @@ package com.ovu.ibeacon.test;
 
 import java.awt.EventQueue;
 
-import com.ovu.ibeacon.view.IBeaconModelView;
 import com.ovu.ibeacon.view.SceneBackgroudFrame;
 import com.ovu.ibeacon.view.SceneBackgroundPanel;
 
@@ -20,6 +19,7 @@ public class Test {
 			public void run() {
 				SceneBackgroudFrame sbg = new SceneBackgroudFrame();
 				sbg.setContentPane(new SceneBackgroundPanel());
+//				sbg.setContentPane(new JButton("Change Color"));
 			}
 			
 		});
