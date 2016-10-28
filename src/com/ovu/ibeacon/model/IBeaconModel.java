@@ -4,7 +4,16 @@ public class IBeaconModel {
 	
 	String id;
 	String name;
+	double distance;
 	
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
 	public IBeaconModel(){
 		
 	}
