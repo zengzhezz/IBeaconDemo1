@@ -112,7 +112,7 @@ public class SceneBackgroundPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		ImageIcon imageIcon = new ImageIcon("images/dt.jpg");
+		ImageIcon imageIcon = new ImageIcon("images/background.jpg");
 		Image image = imageIcon.getImage();
 		g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
 	}

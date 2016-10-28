@@ -1,16 +1,11 @@
 package com.ovu.ibeacon.view;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -40,24 +35,40 @@ public class IBeaconModelView extends JPanel {
 		add(nameLabel);
 		// 添加距离标签
 		distanceLabel = new JLabel();
-		//设置文本中心对齐
+		// 设置文本中心对齐
 		distanceLabel.setHorizontalAlignment(JLabel.CENTER);
+		// 设置位置
 		distanceLabel.setBounds(0, traiView.getHeight(), traiView.getWidth(),
 				20);
+		// 设置字体
 		distanceLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-//		distanceLabel.setVisible(false);
+		// 设置背景白色
+		distanceLabel.setBackground(Color.WHITE);
+		// 设置边框黑色
+		distanceLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		// 重要，设置为true白色背景才能显示
+		distanceLabel.setOpaque(true);
+		// 初始状态不显示
+		distanceLabel.setVisible(false);
 		add(distanceLabel);
 		// 背景透明
-		 setBackground(Color.RED);
-		 setOpaque(false);
+		setOpaque(false);
 	}
 
+	/**
+	 * 设置距离标志值
+	 * @param distance
+	 */
 	public void setDistanceLabel(double distance) {
 		ibeaconmodel.setDistance(distance);
 		distanceLabel.setText("Distance: "
 				+ String.valueOf(ibeaconmodel.getDistance()));
 	}
 
+	/**
+	 * 设置距离标签是否可见，true可见，false不可见
+	 * @param flag
+	 */
 	public void setDistanceLabelVisible(boolean flag) {
 		distanceLabel.setVisible(flag);
 	}
@@ -67,6 +78,10 @@ public class IBeaconModelView extends JPanel {
 		super.paintComponent(g);
 	}
 
+	/**
+	 * 设置该IBeaconView里的IBeacon对象的name
+	 * @param name
+	 */
 	public void setIBeaconModelName(String name) {
 		ibeaconmodel.setName(name);
 	}
@@ -76,10 +91,16 @@ public class IBeaconModelView extends JPanel {
 		return new Dimension(200, 220);
 	}
 
+	/**
+	 * 打开靠近时的动画效果
+	 */
 	public void setTrigger() {
 		traiView.setTriggerFlag(true);
 	}
 
+	/**
+	 * 关闭靠近时的动画效果
+	 */
 	public void clearTrigger() {
 		traiView.setTriggerFlag(false);
 	}

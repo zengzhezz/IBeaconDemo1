@@ -2,7 +2,8 @@ package com.ovu.ibeacon.model;
 
 public class IBeaconModel {
 	
-	String id;
+	String uuid;
+	String rssi;
 	String name;
 	double distance;
 	
@@ -18,12 +19,20 @@ public class IBeaconModel {
 		
 	}
 
-	public String getId() {
-		return id;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getRssi() {
+		return rssi;
+	}
+
+	public void setRssi(String rssi) {
+		this.rssi = rssi;
 	}
 
 	public String getName() {
