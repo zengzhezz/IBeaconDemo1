@@ -13,13 +13,16 @@ import com.ovu.ibeacon.model.IBeaconModel;
 import com.ovu.ibeacon.utils.HttpRequest;
 import com.ovu.ibeacon.utils.Utils;
 
-public class HttpRequestDao {
+/**
+ * @author zz 2016/10/31
+ */
+public class HttpRequestDao2 {
 
 	private List<IBeaconModel> iBeaconList = new ArrayList<IBeaconModel>();
 
 	public interface DataOutOfRangeListener {
-		public void getClose(IBeaconModel ib);
-		public void getFar(IBeaconModel ib);
+		public void getClose(List<IBeaconModel> ib);
+		public void getFar();
 	}
 
 	private DataOutOfRangeListener outOfRangeListener;
@@ -29,7 +32,7 @@ public class HttpRequestDao {
 		this.outOfRangeListener = outOfRangeListener;
 	}
 
-	public HttpRequestDao(final String url, final String param) {
+	public HttpRequestDao2(final String url, final String param) {
 		// 设置时间线程，向服务器访问数据
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
@@ -62,17 +65,21 @@ public class HttpRequestDao {
 									ib.getRssi(), 16)));
 							iBeaconList.add(ib);
 						}
+						List<IBeaconModel> transformList = new ArrayList<IBeaconModel>();
 						for (IBeaconModel iBeaconModel : iBeaconList) {
 							System.out.println("UUID=" + iBeaconModel.getUuid()
 									+ " RSSI=" + iBeaconModel.getRssi() + " Distance="
 									+ iBeaconModel.getDistance());
 							if (iBeaconModel.getDistance() < 5) {
-								if (outOfRangeListener != null)
-									outOfRangeListener.getClose(iBeaconModel);
-							} else {
-								if (outOfRangeListener != null)
-									outOfRangeListener.getFar(iBeaconModel);
-							}
+								transformList.add(iBeaconModel);
+							} 
+						}
+						if(transformList !=null && transformList.size() != 0){
+							if (outOfRangeListener != null)
+								outOfRangeListener.getClose(transformList);
+						}else{
+							if (outOfRangeListener != null)
+								outOfRangeListener.getFar();
 						}
 						iBeaconList.clear();
 						System.out.println("--------------打印此组数据结束-----------------");
@@ -83,7 +90,7 @@ public class HttpRequestDao {
 				}
 			}
 		};
-		timer.schedule(task, 0, 1000);
+		timer.schedule(task, 0, 3000);
 	}
 
 	/**
@@ -94,7 +101,9 @@ public class HttpRequestDao {
 	 */
 	public double calDistance(int rrsi) {
 		double distance = 0;
+//		System.out.println("rrsi = " + rrsi);
 		int A = rrsi - 54;
+//		System.out.println("A = " + A + " ");
 		double n = 0;
 		if (A <= 4) {
 			n = 1.1;
@@ -116,7 +125,7 @@ public class HttpRequestDao {
 	}
 
 	public static void main(String[] args) {
-		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM2);
+		HttpRequestDao2 httpDao = new HttpRequestDao2(Utils.URL, Utils.PARAM2);
 	}
 
 	/**

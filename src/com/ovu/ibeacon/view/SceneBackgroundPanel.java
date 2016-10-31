@@ -15,7 +15,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.ovu.ibeacon.dao.HttpRequestDao;
 import com.ovu.ibeacon.model.IBeaconModel;
+import com.ovu.ibeacon.utils.Utils;
 
 public class SceneBackgroundPanel extends JPanel {
 
@@ -37,10 +39,10 @@ public class SceneBackgroundPanel extends JPanel {
 	}
 
 	public void initModels() {
-		modelView1 = new IBeaconModelView("SN1");
-		modelView2 = new IBeaconModelView("SN2");
-		modelView3 = new IBeaconModelView("SN3");
-		modelView4 = new IBeaconModelView("SN4");
+		modelView1 = new IBeaconModelView("00000001");
+		modelView2 = new IBeaconModelView("00000002");
+		modelView3 = new IBeaconModelView("00000003");
+		modelView4 = new IBeaconModelView("00000004");
 		modelView1.setBounds(200, 30, modelView1.getWidth(),
 				modelView1.getHeight());
 		modelView2.setBounds(panelWidth - 250 - modelView2.getWidth(), 180,
@@ -48,7 +50,7 @@ public class SceneBackgroundPanel extends JPanel {
 		modelView3.setBounds(panelWidth/2-50, 320,
 				modelView3.getWidth(), modelView3.getHeight());
 		modelView4.setBounds(panelWidth - 400 - modelView4.getWidth(),
-				panelHeight - 50 - modelView4.getHeight(),
+				panelHeight - 80 - modelView4.getHeight(),
 				modelView4.getWidth(), modelView4.getHeight());
 		add(modelView1);
 		add(modelView2);
@@ -71,13 +73,13 @@ public class SceneBackgroundPanel extends JPanel {
 				int value = innerSlider.getValue();
 				if(value<20){
 					//打开动画效果
-					modelView1.setTrigger();
+					modelView2.setTrigger();
 					//打开距离显示
-					modelView1.setDistanceLabel(value);
-					modelView1.setDistanceLabelVisible(true);
+					modelView2.setDistanceLabel(value);
+					modelView2.setDistanceLabelVisible(true);
 				}else{
-					modelView1.clearTrigger();
-					modelView1.setDistanceLabelVisible(false);
+					modelView2.clearTrigger();
+					modelView2.setDistanceLabelVisible(false);
 				}
 			}
 		});
@@ -90,24 +92,63 @@ public class SceneBackgroundPanel extends JPanel {
 		slider.setOpaque(false);
 		add(slider);
 		
-//		//初始化Http请求
-//		HttpRequestDao httpDao = new HttpRequestDao();
-//		//注册监听事件，超过范围采取相应的操作
-//		httpDao.setDataOutOfRangeListener(new HttpRequestDao.DataOutOfRangeListener() {
-//			
-//			@Override
-//			public void getFar() {
-//				modelView1.setTrigger();;
-//			}
-//			
-//			@Override
-//			public void getClose() {
-//				modelView1.clearTrigger();;
-//			}
-//		});
-		
+		//初始化Http请求
+		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM2);
+		//注册监听事件，超过范围采取相应的操作
+		httpDao.setDataOutOfRangeListener(dataOutOfRangeListener);
 		
 	}
+	
+	HttpRequestDao.DataOutOfRangeListener dataOutOfRangeListener = new HttpRequestDao.DataOutOfRangeListener() {
+		
+		@Override
+		public void getFar(IBeaconModel ib) {
+			if(ib.getUuid().equals(modelView1.getIBeaconModelUuid())){
+				modelView1.clearTrigger();
+				modelView1.setDistanceLabelVisible(false);
+			}else if(ib.getUuid().equals(modelView2.getIBeaconModelUuid())){
+				modelView2.clearTrigger();
+				modelView2.setDistanceLabelVisible(false);
+			}else if(ib.getUuid().equals(modelView3.getIBeaconModelUuid())){
+				modelView3.clearTrigger();
+				modelView3.setDistanceLabelVisible(false);
+			}
+			else if(ib.getUuid().equals(modelView4.getIBeaconModelUuid())){
+				modelView4.clearTrigger();
+				modelView4.setDistanceLabelVisible(false);
+			}
+		}
+		
+		@Override
+		public void getClose(IBeaconModel ib) {
+			if(ib.getUuid().equals(modelView1.getIBeaconModelUuid())){
+				//打开动画效果
+				modelView1.setTrigger();
+				//打开距离显示
+				modelView1.setDistanceLabel(ib.getDistance());
+				modelView1.setDistanceLabelVisible(true);
+			}else if(ib.getUuid().equals(modelView2.getIBeaconModelUuid())){
+				//打开动画效果
+				modelView2.setTrigger();
+				//打开距离显示
+				modelView2.setDistanceLabel(ib.getDistance());
+				modelView2.setDistanceLabelVisible(true);
+			}else if(ib.getUuid().equals(modelView3.getIBeaconModelUuid())){
+				//打开动画效果
+				modelView3.setTrigger();
+				//打开距离显示
+				modelView3.setDistanceLabel(ib.getDistance());
+				modelView3.setDistanceLabelVisible(true);
+			}
+			else if(ib.getUuid().equals(modelView4.getIBeaconModelUuid())){
+				//打开动画效果
+				modelView4.setTrigger();
+				//打开距离显示
+				modelView4.setDistanceLabel(ib.getDistance());
+				modelView4.setDistanceLabelVisible(true);
+			}
+		}
+	};
 
 	@Override
 	protected void paintComponent(Graphics g) {

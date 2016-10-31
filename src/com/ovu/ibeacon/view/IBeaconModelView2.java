@@ -4,42 +4,48 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import com.ovu.ibeacon.model.IBeaconModel;
 
-public class IBeaconModelView extends JPanel {
+public class IBeaconModelView2 extends JPanel {
 
 	Color modelColor = Color.WHITE;
 	TraiangleView traiView;
-	private IBeaconModel ibeaconmodel = null;
+//	private List<IBeaconModel> ibeaconList = null;
 	private JLabel distanceLabel = null;
 
-	public IBeaconModelView(String uuid) {
-		ibeaconmodel = new IBeaconModel();
-		setIBeaconModelUuid(uuid);
+	public IBeaconModelView2(String uuid) {
+//		ibeaconList = new ArrayList<IBeaconModel>();
 		setLayout(null);
-		setSize(200, 220);
+		setSize(200, 400);
 		// 添加三角形图片
 		traiView = new TraiangleView();
 		traiView.setBounds(0, 0, traiView.getWidth(), traiView.getHeight());
 		add(traiView);
 		// 添加名字标签
-		JLabel nameLabel = new JLabel(ibeaconmodel.getUuid(), JLabel.CENTER);
+		JLabel nameLabel = new JLabel("SN1", JLabel.CENTER);
 		nameLabel.setBounds(0, traiView.getHeight() - 65, traiView.getWidth(),
 				20);
 		nameLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 		add(nameLabel);
+		
+		setBackground(Color.RED);
+		
 		// 添加距离标签
 		distanceLabel = new JLabel();
 		// 设置文本中心对齐
 		distanceLabel.setHorizontalAlignment(JLabel.CENTER);
 		// 设置位置
 		distanceLabel.setBounds(0, traiView.getHeight(), traiView.getWidth(),
-				20);
+				120);
 		// 设置字体
 		distanceLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 		// 设置背景白色
@@ -53,24 +59,31 @@ public class IBeaconModelView extends JPanel {
 		add(distanceLabel);
 		// 背景透明
 		setOpaque(false);
+		//显示距离标签
+		//showDistanceLabel();
 	}
 
+	
 	/**
-	 * 设置距离标志值
-	 * @param distance
+	 * 显示距离标签，如果ibeaconList为空则不显示距离和动画，否则显示ibeaconList里的相应信息并打开动画
+	 * @param ibeaconList
 	 */
-	public void setDistanceLabel(double distance) {
-		ibeaconmodel.setDistance(distance);
-		distanceLabel.setText("Distance: "
-				+ String.format("%.2f", ibeaconmodel.getDistance()) + "m");
-	}
-
-	/**
-	 * 设置距离标签是否可见，true可见，false不可见
-	 * @param flag
-	 */
-	public void setDistanceLabelVisible(boolean flag) {
-		distanceLabel.setVisible(flag);
+	public void showDistanceLabel(List<IBeaconModel> ibeaconList) {
+		if(null != ibeaconList && ibeaconList.size() != 0){
+			StringBuilder s = new StringBuilder();
+			s.append("<html>");
+			for (IBeaconModel iBeaconModel : ibeaconList) {
+				s.append(iBeaconModel.getUuid() + " ");
+				s.append("Distance: " + String.format("%.2f", iBeaconModel.getDistance()) + "<br> ");
+			}
+			s.append("</html>");
+			distanceLabel.setText(s.toString());
+			distanceLabel.setVisible(true);
+			setTrigger();
+		}else{
+			distanceLabel.setVisible(false);
+			clearTrigger();
+		}
 	}
 
 	@Override
@@ -78,25 +91,9 @@ public class IBeaconModelView extends JPanel {
 		super.paintComponent(g);
 	}
 
-	/**
-	 * 设置该IBeaconView里的IBeacon对象的uuid
-	 * @param name
-	 */
-	public void setIBeaconModelUuid(String uuid) {
-		ibeaconmodel.setUuid(uuid);
-	}
-	
-	/**
-	 * 得到该IBeaconView里的IBeacon对象的uuid
-	 * @param name
-	 */
-	public String getIBeaconModelUuid() {
-		return ibeaconmodel.getUuid();
-	}
-
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(200, 220);
+		return new Dimension(200, 400);
 	}
 
 	/**
@@ -111,6 +108,12 @@ public class IBeaconModelView extends JPanel {
 	 */
 	public void clearTrigger() {
 		traiView.setTriggerFlag(false);
+	}
+	
+	public static void main(String[] args) {
+		SceneBackgroudFrame sbg = new SceneBackgroudFrame();
+		IBeaconModelView2 b2 = new IBeaconModelView2("momo");
+		sbg.add(b2);
 	}
 
 }

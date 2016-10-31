@@ -7,16 +7,30 @@ public class IBeaconModel {
 	String name;
 	double distance;
 	
+	/**
+	 * 无参数构造方法
+	 */
+	public IBeaconModel(){
+		
+	}
+	
+	/**
+	 * 带 uuid 和  distance 的构造方法
+	 * @param uuid
+	 * @param distance
+	 */
+	public IBeaconModel(String uuid, double distance) {
+		super();
+		this.uuid = uuid;
+		this.distance = distance;
+	}
+
 	public double getDistance() {
 		return distance;
 	}
 
 	public void setDistance(double distance) {
 		this.distance = distance;
-	}
-
-	public IBeaconModel(){
-		
 	}
 
 	public String getUuid() {

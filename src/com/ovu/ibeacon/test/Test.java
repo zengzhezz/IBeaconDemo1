@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import com.ovu.ibeacon.view.SceneBackgroudFrame;
 import com.ovu.ibeacon.view.SceneBackgroundPanel;
+import com.ovu.ibeacon.view.SceneBackgroundPanel2;
 
 public class Test {
 
@@ -18,7 +19,7 @@ public class Test {
 			@Override
 			public void run() {
 				SceneBackgroudFrame sbg = new SceneBackgroudFrame();
-				sbg.setContentPane(new SceneBackgroundPanel());
+				sbg.setContentPane(new SceneBackgroundPanel2());
 //				sbg.setContentPane(new JButton("Change Color"));
 			}
 			
