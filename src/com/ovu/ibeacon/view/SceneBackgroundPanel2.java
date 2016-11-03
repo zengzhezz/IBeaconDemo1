@@ -39,7 +39,7 @@ public class SceneBackgroundPanel2 extends JPanel {
 	private IBeaconModelView2 modelView17;
 	private IBeaconModelView2 modelView18;
 	private IBeaconModelView2 modelView19;
-	private IBeaconModelView2 modelView20;
+	private IBeaconModelView2 modelView1A;
 	private JPopupMenu popup;
 
 	private Boolean btnPressFlag = false;
@@ -62,11 +62,15 @@ public class SceneBackgroundPanel2 extends JPanel {
 //		modelView16 = new IBeaconModelView2("SN16");
 		modelView17 = new IBeaconModelView2("SN17");
 		modelView18 = new IBeaconModelView2("SN18");
+		modelView19 = new IBeaconModelView2("SN19");
+		modelView1A = new IBeaconModelView2("SN1A");
 //		modelView1.setBounds(400, 50, modelView1.getWidth(), modelView1.getHeight());
 //		modelView2.setBounds(700, 50, modelView2.getWidth(), modelView2.getHeight());
 //		modelView3.setBounds(500, 50, modelView3.getWidth(), modelView3.getHeight());
 		modelView17.setBounds(1300, 50, modelView17.getWidth(), modelView17.getHeight());
 		modelView18.setBounds(550, 620, modelView18.getWidth(), modelView18.getHeight());
+		modelView19.setBounds(550, 620, modelView19.getWidth(), modelView19.getHeight());
+		modelView1A.setBounds(550, 620, modelView1A.getWidth(), modelView1A.getHeight());
 //		modelView6.setBounds(550, 620, modelView6.getWidth(), modelView6.getHeight());
 //		modelView7.setBounds(1150, 620, modelView7.getWidth(), modelView7.getHeight());
 //		modelView8.setBounds(800, 650, modelView8.getWidth(), modelView8.getHeight());
@@ -77,8 +81,8 @@ public class SceneBackgroundPanel2 extends JPanel {
 //		add(modelView3);
 		add(modelView17);
 		add(modelView18);
-//		add(modelView6);
-//		add(modelView7);
+		add(modelView19);
+		add(modelView1A);
 //		add(modelView8);
 //		add(modelView9);
 //		add(modelView10);
@@ -95,9 +99,9 @@ public class SceneBackgroundPanel2 extends JPanel {
 //		registerSN(modelView2, Utils.URL, Utils.PARAM2);
 //		registerSN(modelView3, Utils.URL, Utils.PARAM3);
 		registerSN(modelView17, Utils.URL, Utils.PARAM17);
-		registerSN(modelView18, Utils.URL, Utils.PARAM18);
-//		registerSN(modelView6, Utils.URL, Utils.PARAM6);
-//		registerSN(modelView7, Utils.URL, Utils.PARAM7);
+//		registerSN(modelView18, Utils.URL, Utils.PARAM18);
+//		registerSN(modelView19, Utils.URL, Utils.PARAM19);
+//		registerSN(modelView1A, Utils.URL, Utils.PARAM1A);
 //		registerSN(modelView8, Utils.URL, Utils.PARAM);
 //		registerSN(modelView9, Utils.URL, Utils.PARAM);
 //		registerSN(modelView10, Utils.URL, Utils.PARAM);

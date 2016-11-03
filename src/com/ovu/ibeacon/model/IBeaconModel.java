@@ -2,11 +2,12 @@ package com.ovu.ibeacon.model;
 
 public class IBeaconModel {
 	
-	String uuid;
-	String rssi;
-	String name;
-	double distance;
-	
+	private String uuid;
+	private String rssi;
+	private String name;
+	private double distance;
+	private int updateTime;
+
 	/**
 	 * 无参数构造方法
 	 */
@@ -57,6 +58,21 @@ public class IBeaconModel {
 		this.name = name;
 	}
 	
+	public int getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(int updateTime) {
+		this.updateTime = updateTime;
+	}
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof IBeaconModel){
+			IBeaconModel beacon = (IBeaconModel) obj;
+			if(this.uuid.equals(beacon.getUuid()))
+				return true;
+		}
+		return false;
+	}
 }

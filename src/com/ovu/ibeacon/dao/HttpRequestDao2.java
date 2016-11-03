@@ -20,6 +20,7 @@ public class HttpRequestDao2 {
 
 	private boolean timeOutFlag = false;
 	private List<IBeaconModel> iBeaconList = new ArrayList<IBeaconModel>();
+	private List<IBeaconModel> transformList2 = new ArrayList<IBeaconModel>();
 
 	public interface DataOutOfRangeListener {
 		public void getClose(List<IBeaconModel> ib);
@@ -98,19 +99,38 @@ public class HttpRequestDao2 {
 							ib.setRssi(data10.substring(8));
 							ib.setDistance(calDistance(Integer.parseInt(
 									ib.getRssi(), 16)));
+							ib.setUpdateTime(readTime);
 							iBeaconList.add(ib);
 						}
 						List<IBeaconModel> transformList = new ArrayList<IBeaconModel>();
 						for (IBeaconModel iBeaconModel : iBeaconList) {
-							System.out
-									.println("UUID=" + iBeaconModel.getUuid()
+							System.out.println("iBeaconList UUID=" + iBeaconModel.getUuid()
 											+ " RSSI=" + iBeaconModel.getRssi()
 											+ " Distance="
 											+ iBeaconModel.getDistance());
 							// 设置iBeacon报警阈值
 							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
 								transformList.add(iBeaconModel);
+								//判断是否修改transformList2中的数据
+								if(transformList2!=null && transformList2.size()!=0){
+									if(transformList2.contains(iBeaconModel)){
+										transformList2.set(transformList2.indexOf(iBeaconModel), iBeaconModel);
+									}else{
+										transformList2.add(iBeaconModel);
+									}
+								}else{
+									transformList2.add(iBeaconModel);
+								}
+							}else{
+								transformList2.remove(iBeaconModel);
 							}
+						}
+						//打印transformList2信息
+						for (IBeaconModel iBeaconModel2 : transformList2) {
+							System.out.println("iBeaconModel2 UUID=" + iBeaconModel2.getUuid()
+									+ " RSSI=" + iBeaconModel2.getRssi()
+									+ " Distance="
+									+ iBeaconModel2.getDistance() + " updateTime=" + iBeaconModel2.getUpdateTime());
 						}
 						if (transformList != null && transformList.size() != 0) {
 							if (outOfRangeListener != null)
