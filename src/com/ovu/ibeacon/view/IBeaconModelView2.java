@@ -15,7 +15,16 @@ import javax.swing.JTextPane;
 
 import com.ovu.ibeacon.model.IBeaconModel;
 
+/**
+ * 以节点SN为参照点不动，测每个Beacon相对于节点的距离
+ * @author zz
+ *
+ */
 public class IBeaconModelView2 extends JPanel {
+	
+	private boolean timeOut = false;
+	private String lastUpdateTime = null;
+	private String name;
 
 	Color modelColor = Color.WHITE;
 	TraiangleView traiView;
@@ -24,14 +33,15 @@ public class IBeaconModelView2 extends JPanel {
 
 	public IBeaconModelView2(String uuid) {
 //		ibeaconList = new ArrayList<IBeaconModel>();
+		this.name = uuid;
 		setLayout(null);
-		setSize(200, 400);
+		setSize(200, 600);
 		// 添加三角形图片
 		traiView = new TraiangleView();
 		traiView.setBounds(0, 0, traiView.getWidth(), traiView.getHeight());
 		add(traiView);
 		// 添加名字标签
-		JLabel nameLabel = new JLabel("SN1", JLabel.CENTER);
+		JLabel nameLabel = new JLabel(getName(), JLabel.CENTER);
 		nameLabel.setBounds(0, traiView.getHeight() - 65, traiView.getWidth(),
 				20);
 		nameLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
@@ -44,8 +54,8 @@ public class IBeaconModelView2 extends JPanel {
 		// 设置文本中心对齐
 		distanceLabel.setHorizontalAlignment(JLabel.CENTER);
 		// 设置位置
-		distanceLabel.setBounds(0, traiView.getHeight(), traiView.getWidth(),
-				120);
+//		distanceLabel.setBounds(0, traiView.getHeight(), traiView.getWidth(),
+//				180);
 		// 设置字体
 		distanceLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 		// 设置背景白色
@@ -69,19 +79,32 @@ public class IBeaconModelView2 extends JPanel {
 	 * @param ibeaconList
 	 */
 	public void showDistanceLabel(List<IBeaconModel> ibeaconList) {
-		if(null != ibeaconList && ibeaconList.size() != 0){
+		if(!timeOut){
+			if(null != ibeaconList && ibeaconList.size() != 0){
+				distanceLabel.setVisible(true);
+				distanceLabel.setBounds(0, traiView.getHeight()-18, traiView.getWidth(), ibeaconList.size() * 25);
+				StringBuilder s = new StringBuilder();
+				s.append("<html>");
+				for (IBeaconModel iBeaconModel : ibeaconList) {
+					s.append(iBeaconModel.getUuid() + " ");
+					s.append("Distance: " + String.format("%.2f", iBeaconModel.getDistance()) + "<br> ");
+				}
+				s.append("</html>");
+				distanceLabel.setText(s.toString());
+				setTrigger();
+			}else{
+				distanceLabel.setVisible(false);
+				clearTrigger();
+			}
+		}else{
+			distanceLabel.setVisible(true);
+			distanceLabel.setBounds(0, traiView.getHeight()-18, traiView.getWidth(), 70);
 			StringBuilder s = new StringBuilder();
 			s.append("<html>");
-			for (IBeaconModel iBeaconModel : ibeaconList) {
-				s.append(iBeaconModel.getUuid() + " ");
-				s.append("Distance: " + String.format("%.2f", iBeaconModel.getDistance()) + "<br> ");
-			}
+			s.append("节点超时<br> ");
+			s.append("上次更新时间: <br>" + formatTime(lastUpdateTime).substring(4));
 			s.append("</html>");
 			distanceLabel.setText(s.toString());
-			distanceLabel.setVisible(true);
-			setTrigger();
-		}else{
-			distanceLabel.setVisible(false);
 			clearTrigger();
 		}
 	}
@@ -114,6 +137,35 @@ public class IBeaconModelView2 extends JPanel {
 		SceneBackgroudFrame sbg = new SceneBackgroudFrame();
 		IBeaconModelView2 b2 = new IBeaconModelView2("momo");
 		sbg.add(b2);
+	}
+	
+	/**
+	 * 设置节点超时
+	 * @param flag
+	 * @param time
+	 */
+	public void setTimeOut(boolean flag, String time){
+		timeOut = flag;
+		this.lastUpdateTime = time;
+	}
+	
+	/**
+	 * 对服务器传来的时间参数格式化以便输出
+	 * @param time
+	 * @return
+	 */
+	public String formatTime(String time){
+		String result = time.substring(0,6)+"月"+time.substring(6,8)+"日"+time.substring(8,10)+"时"+time.substring(10,12)+"分"+time.substring(12,14)+"秒";
+		return result;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

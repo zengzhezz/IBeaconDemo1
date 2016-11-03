@@ -93,7 +93,7 @@ public class SceneBackgroundPanel extends JPanel {
 		add(slider);
 		
 		//初始化Http请求
-		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM2);
+		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM14);
 		//注册监听事件，超过范围采取相应的操作
 		httpDao.setDataOutOfRangeListener(dataOutOfRangeListener);
 		

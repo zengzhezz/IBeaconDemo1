@@ -38,7 +38,7 @@ public class TraiangleView extends JPanel {
 			@Override
 			public void run() {
 				setAngle(theta);
-				theta = theta + Math.PI / 180;
+				theta = theta + Math.PI / (180 * 2);
 				radius = radius + 0.8;
 				if(radius > 80)
 					radius = igwidth / 2;

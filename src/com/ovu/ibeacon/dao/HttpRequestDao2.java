@@ -1,7 +1,7 @@
 package com.ovu.ibeacon.dao;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,11 +18,15 @@ import com.ovu.ibeacon.utils.Utils;
  */
 public class HttpRequestDao2 {
 
+	private boolean timeOutFlag = false;
 	private List<IBeaconModel> iBeaconList = new ArrayList<IBeaconModel>();
 
 	public interface DataOutOfRangeListener {
 		public void getClose(List<IBeaconModel> ib);
+
 		public void getFar();
+
+		public void timeOut(boolean flag, String lastUpdateTime);
 	}
 
 	private DataOutOfRangeListener outOfRangeListener;
@@ -41,23 +45,54 @@ public class HttpRequestDao2 {
 				String data = null;
 				HttpRequest hr = new HttpRequest();
 				String s = hr.sendGet(url, param);
-				s = formatString(s);
+				// System.out.println(s);
+				// s = formatString(s);
 				System.out.println("--------------开始打印一组数据-----------------");
 				System.out.println(s);
 				try {
 					JSONObject jsonObj = JSONObject.fromObject(s);
+					// 获取系统当前时间
+					Calendar c = Calendar.getInstance();
+					int hour = c.get(Calendar.HOUR_OF_DAY);
+					int minute = c.get(Calendar.MINUTE);
+					int seconds = c.get(Calendar.SECOND);
 					// 取得data数据
 					data = jsonObj.getString("data");
-					//判断节点是否已经入网，正确传输数据
-					if(data.equals("0000000000ff")){
+					// 取得上次更新数据时间
+					String last_update_time = jsonObj
+							.getString("last_update_time");
+					//计算取得的系统时间，单位s
+					double sysTime = hour * 60 * 60 + minute * 60 + seconds;
+					//计算读取的节点数据时间，单位s
+					int readTime = Integer.parseInt(last_update_time.substring(8, 10)) * 60 * 60 + Integer.parseInt(last_update_time.substring(10, 12)) * 60 + Integer.parseInt(last_update_time.substring(12, 14));
+					if (timeOutFlag == false) {
+						//时间差大于80s, 判断为超时
+						if ((sysTime - readTime) >= 80) {
+							timeOutFlag = true;
+							System.out.println(jsonObj.getString("mac") + "超时");
+							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
+						}
+					} else {
+						//时间差小于80s, 未超时，正常显示
+						if (sysTime - readTime < 80) {
+							timeOutFlag = false;
+							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
+						}
+					}
+					if(data.length()==0){
+						if (outOfRangeListener != null)
+							outOfRangeListener.getFar();
+					}else if (data.equals("0000000000ff")) { // 判断节点是否已经入网，正确传输数据
 						System.out.println("节点还没入网");
-					}else{
+					} else if (!timeOutFlag && data.length() != 0) {
 						// dataCount数据组数
 						String dataCount = data.substring(4, 6);
 						// 得到除去数据头的有效数据字符串dataWithoutHead
-						String dataWithoutHead = data.substring(8, data.length());
+						String dataWithoutHead = data.substring(8,
+								data.length());
 						for (int i = 0; i < dataWithoutHead.length(); i = i + 10) {
-							String data10 = dataWithoutHead.substring(i, i + 10);
+							String data10 = dataWithoutHead
+									.substring(i, i + 10);
 							IBeaconModel ib = new IBeaconModel();
 							ib.setUuid(data10.substring(0, 8));
 							ib.setRssi(data10.substring(8));
@@ -67,22 +102,26 @@ public class HttpRequestDao2 {
 						}
 						List<IBeaconModel> transformList = new ArrayList<IBeaconModel>();
 						for (IBeaconModel iBeaconModel : iBeaconList) {
-							System.out.println("UUID=" + iBeaconModel.getUuid()
-									+ " RSSI=" + iBeaconModel.getRssi() + " Distance="
-									+ iBeaconModel.getDistance());
-							if (iBeaconModel.getDistance() < 5) {
+							System.out
+									.println("UUID=" + iBeaconModel.getUuid()
+											+ " RSSI=" + iBeaconModel.getRssi()
+											+ " Distance="
+											+ iBeaconModel.getDistance());
+							// 设置iBeacon报警阈值
+							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
 								transformList.add(iBeaconModel);
-							} 
+							}
 						}
-						if(transformList !=null && transformList.size() != 0){
+						if (transformList != null && transformList.size() != 0) {
 							if (outOfRangeListener != null)
 								outOfRangeListener.getClose(transformList);
-						}else{
+						} else {
 							if (outOfRangeListener != null)
 								outOfRangeListener.getFar();
 						}
 						iBeaconList.clear();
-						System.out.println("--------------打印此组数据结束-----------------");
+						System.out
+								.println("--------------打印此组数据结束-----------------");
 						System.out.println();
 					}
 				} catch (JSONException e) {
@@ -90,46 +129,46 @@ public class HttpRequestDao2 {
 				}
 			}
 		};
-		timer.schedule(task, 0, 3000);
+		// 3s执行一次
+		timer.schedule(task, 0, 5000);
 	}
 
 	/**
-	 * 计算距离函数
-	 * rrsi的范围在 21-53 和 55~77 之间有效
+	 * 计算距离函数 rrsi的范围在 21-53 和 55~77 之间有效
+	 * 
 	 * @param rrsi
 	 * @return
 	 */
 	public double calDistance(int rrsi) {
 		double distance = 0;
-//		System.out.println("rrsi = " + rrsi);
 		int A = rrsi - 54;
-//		System.out.println("A = " + A + " ");
 		double n = 0;
 		if (A <= 4) {
-			n = 1.1;
-		} else if (A > 4 && A <= 7) {
 			n = 1.3;
-		}  else if (A > 7 && A <= 12) {
-			n = 1.6;
-		}  else if (A > 12 && A <= 15) {
-			n = 1.85;
-		}  else if (A > 15 && A <= 18) {
-			n = 2.1;
-		}  else if (A > 18 && A <= 23) {
+		} else if (A > 4 && A <= 7) {
+			n = 1.5;
+		} else if (A > 7 && A <= 12) {
+			n = 1.75;
+		} else if (A > 12 && A <= 15) {
+			n = 1.9;
+		} else if (A > 15 && A <= 18) {
 			n = 2.3;
-		}  else {
+		} else if (A > 18 && A <= 23) {
 			n = 2.5;
+		} else {
+			n = 2.7;
 		}
 		distance = Math.pow(10, (double) A / (10 * n));
 		return distance;
 	}
 
 	public static void main(String[] args) {
-		HttpRequestDao2 httpDao = new HttpRequestDao2(Utils.URL, Utils.PARAM2);
+		HttpRequestDao2 httpDao = new HttpRequestDao2(Utils.URL, Utils.PARAM14);
 	}
 
 	/**
 	 * 将从服务器得到的数据格式编程可解析的Json字符串，去掉前后的""和中间的各种\
+	 * 
 	 * @param s
 	 * @return
 	 */
