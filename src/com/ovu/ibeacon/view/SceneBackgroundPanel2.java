@@ -76,16 +76,6 @@ public class SceneBackgroundPanel2 extends JPanel {
 //		modelView8.setBounds(800, 650, modelView8.getWidth(), modelView8.getHeight());
 //		modelView9.setBounds(1100, 650, modelView9.getWidth(), modelView9.getHeight());
 //		modelView10.setBounds(1400, 650, modelView10.getWidth(), modelView10.getHeight());
-//		add(modelView1);
-//		add(modelView2);
-//		add(modelView3);
-		add(modelView17);
-		add(modelView18);
-		add(modelView19);
-		add(modelView1A);
-//		add(modelView8);
-//		add(modelView9);
-//		add(modelView10);
 	}
 
 	public SceneBackgroundPanel2() {
@@ -95,9 +85,6 @@ public class SceneBackgroundPanel2 extends JPanel {
 		setSize(panelWidth, panelHeight);
 		initModels();
 		initMemu();
-//		registerSN(modelView1, Utils.URL, Utils.PARAM);
-//		registerSN(modelView2, Utils.URL, Utils.PARAM2);
-//		registerSN(modelView3, Utils.URL, Utils.PARAM3);
 		registerSN(modelView17, Utils.URL, Utils.PARAM17);
 //		registerSN(modelView18, Utils.URL, Utils.PARAM18);
 //		registerSN(modelView19, Utils.URL, Utils.PARAM19);
@@ -204,6 +191,7 @@ public class SceneBackgroundPanel2 extends JPanel {
 		});
 		
 		registerMenu(modelView);
+		add(modelView);
 		
 	}
 	

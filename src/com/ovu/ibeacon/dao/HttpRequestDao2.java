@@ -21,6 +21,8 @@ public class HttpRequestDao2 {
 	private boolean timeOutFlag = false;
 	private List<IBeaconModel> iBeaconList = new ArrayList<IBeaconModel>();
 	private List<IBeaconModel> transformList2 = new ArrayList<IBeaconModel>();
+	
+	private int sysTime;
 
 	public interface DataOutOfRangeListener {
 		public void getClose(List<IBeaconModel> ib);
@@ -54,6 +56,7 @@ public class HttpRequestDao2 {
 					JSONObject jsonObj = JSONObject.fromObject(s);
 					// 获取系统当前时间
 					Calendar c = Calendar.getInstance();
+					int day=c.get(Calendar.DATE);
 					int hour = c.get(Calendar.HOUR_OF_DAY);
 					int minute = c.get(Calendar.MINUTE);
 					int seconds = c.get(Calendar.SECOND);
@@ -63,19 +66,19 @@ public class HttpRequestDao2 {
 					String last_update_time = jsonObj
 							.getString("last_update_time");
 					//计算取得的系统时间，单位s
-					double sysTime = hour * 60 * 60 + minute * 60 + seconds;
+					sysTime = hour * 60 * 60 + minute * 60 + seconds;
 					//计算读取的节点数据时间，单位s
 					int readTime = Integer.parseInt(last_update_time.substring(8, 10)) * 60 * 60 + Integer.parseInt(last_update_time.substring(10, 12)) * 60 + Integer.parseInt(last_update_time.substring(12, 14));
 					if (timeOutFlag == false) {
 						//时间差大于80s, 判断为超时
-						if ((sysTime - readTime) >= 80) {
+						if (day > Integer.parseInt(last_update_time.substring(6, 8)) ||(sysTime - readTime) >= 80) {
 							timeOutFlag = true;
 							System.out.println(jsonObj.getString("mac") + "超时");
 							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
 						}
 					} else {
-						//时间差小于80s, 未超时，正常显示
-						if (sysTime - readTime < 80) {
+						//时间差小于80s并且在同一天, 未超时，正常显示
+						if (sysTime - readTime < 80 && day == Integer.parseInt(last_update_time.substring(6, 8))) {
 							timeOutFlag = false;
 							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
 						}
@@ -152,6 +155,18 @@ public class HttpRequestDao2 {
 		// 3s执行一次
 		timer.schedule(task, 0, 5000);
 	}
+	
+	/**
+	 * 节点过滤器，把两次都不传数据的节点过滤掉
+	 * @param list
+	 */
+	public void modelFilter(List<IBeaconModel> list){
+		for (IBeaconModel iBeaconModel : list) {
+			if(sysTime - iBeaconModel.getUpdateTime() < 60){
+				list.remove(iBeaconModel);
+			}
+		}
+	}
 
 	/**
 	 * 计算距离函数 rrsi的范围在 21-53 和 55~77 之间有效
@@ -180,10 +195,6 @@ public class HttpRequestDao2 {
 		}
 		distance = Math.pow(10, (double) A / (10 * n));
 		return distance;
-	}
-
-	public static void main(String[] args) {
-		HttpRequestDao2 httpDao = new HttpRequestDao2(Utils.URL, Utils.PARAM14);
 	}
 
 	/**
