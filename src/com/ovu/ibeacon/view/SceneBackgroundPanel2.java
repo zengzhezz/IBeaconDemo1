@@ -33,15 +33,18 @@ public class SceneBackgroundPanel2 extends JPanel {
 	private int panelWidth;
 	private int panelHeight;
 
-	private IBeaconModelView2 modelView14;
-	private IBeaconModelView2 modelView15;
-	private IBeaconModelView2 modelView16;
-	private IBeaconModelView2 modelView17;
-	private IBeaconModelView2 modelView18;
-	private IBeaconModelView2 modelView19;
-	private IBeaconModelView2 modelView1A;
+	private IBeaconModelView2 modelView6C;
+	private IBeaconModelView2 modelView6D;
+	private IBeaconModelView2 modelView6E;
+	private IBeaconModelView2 modelView6F;
+	private IBeaconModelView2 modelView70;
+	private IBeaconModelView2 modelView71;
+	private IBeaconModelView2 modelView72;
+	private IBeaconModelView2 modelView73;
 	private JPopupMenu popup;
-
+	
+	private Image backgroundImage;
+	
 	private Boolean btnPressFlag = false;
 	
 	private Point previousPoint;
@@ -51,31 +54,26 @@ public class SceneBackgroundPanel2 extends JPanel {
 		Dimension screenSize = kit.getScreenSize();
 		panelWidth = screenSize.width;
 		panelHeight = screenSize.height;
+		//设置初始化背景
+		backgroundImage = new ImageIcon("images/background.jpg").getImage();
 	}
 
 	/**
 	 * 初始化节点
 	 */
 	public void initModels() {
-//		modelView14 = new IBeaconModelView2("SN14");
-//		modelView15 = new IBeaconModelView2("SN15");
-//		modelView16 = new IBeaconModelView2("SN16");
-		modelView17 = new IBeaconModelView2("SN17");
-		modelView18 = new IBeaconModelView2("SN18");
-		modelView19 = new IBeaconModelView2("SN19");
-		modelView1A = new IBeaconModelView2("SN1A");
-//		modelView1.setBounds(400, 50, modelView1.getWidth(), modelView1.getHeight());
-//		modelView2.setBounds(700, 50, modelView2.getWidth(), modelView2.getHeight());
-//		modelView3.setBounds(500, 50, modelView3.getWidth(), modelView3.getHeight());
-		modelView17.setBounds(1300, 50, modelView17.getWidth(), modelView17.getHeight());
-		modelView18.setBounds(550, 620, modelView18.getWidth(), modelView18.getHeight());
-		modelView19.setBounds(550, 620, modelView19.getWidth(), modelView19.getHeight());
-		modelView1A.setBounds(550, 620, modelView1A.getWidth(), modelView1A.getHeight());
-//		modelView6.setBounds(550, 620, modelView6.getWidth(), modelView6.getHeight());
-//		modelView7.setBounds(1150, 620, modelView7.getWidth(), modelView7.getHeight());
-//		modelView8.setBounds(800, 650, modelView8.getWidth(), modelView8.getHeight());
-//		modelView9.setBounds(1100, 650, modelView9.getWidth(), modelView9.getHeight());
-//		modelView10.setBounds(1400, 650, modelView10.getWidth(), modelView10.getHeight());
+		modelView6C = new IBeaconModelView2("SN6C");
+		modelView6D = new IBeaconModelView2("SN6D");
+//		modelView6E = new IBeaconModelView2("SN6E");
+		modelView6F = new IBeaconModelView2("SN6F");
+//		modelView70 = new IBeaconModelView2("SN70");
+//		modelView71 = new IBeaconModelView2("SN71");
+		modelView6C.setBounds(400, 50, modelView6C.getWidth(), modelView6C.getHeight());
+		modelView6D.setBounds(700, 50, modelView6D.getWidth(), modelView6D.getHeight());
+//		modelView6E.setBounds(500, 50, modelView6E.getWidth(), modelView6E.getHeight());
+		modelView6F.setBounds(1300, 50, modelView6F.getWidth(), modelView6F.getHeight());
+//		modelView70.setBounds(550, 620, modelView70.getWidth(), modelView70.getHeight());
+//		modelView71.setBounds(550, 620, modelView71.getWidth(), modelView71.getHeight());
 	}
 
 	public SceneBackgroundPanel2() {
@@ -85,14 +83,16 @@ public class SceneBackgroundPanel2 extends JPanel {
 		setSize(panelWidth, panelHeight);
 		initModels();
 		initMemu();
-		registerSN(modelView17, Utils.URL, Utils.PARAM17);
-//		registerSN(modelView18, Utils.URL, Utils.PARAM18);
-//		registerSN(modelView19, Utils.URL, Utils.PARAM19);
-//		registerSN(modelView1A, Utils.URL, Utils.PARAM1A);
-//		registerSN(modelView8, Utils.URL, Utils.PARAM);
-//		registerSN(modelView9, Utils.URL, Utils.PARAM);
-//		registerSN(modelView10, Utils.URL, Utils.PARAM);
+		registerSN(modelView6C, Utils.URL, Utils.PARAM6C);
+		registerSN(modelView6D, Utils.URL, Utils.PARAM6D);
+//		registerSN(modelView6E, Utils.URL, Utils.PARAM6E);
+		registerSN(modelView6F, Utils.URL, Utils.PARAM6F);
+//		registerSN(modelView70, Utils.URL, Utils.PARAM70);
+//		registerSN(modelView71, Utils.URL, Utils.PARAM71);
+//		registerSN(modelView72, Utils.URL, Utils.PARAM72);
 		
+		registerBackGroundToMenu("研发区",new ImageIcon("images/background.jpg").getImage());
+		registerBackGroundToMenu("公司",new ImageIcon("images/background2.jpg").getImage());
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class SceneBackgroundPanel2 extends JPanel {
 	/**
 	 * 注册SN到右键菜单
 	 */
-	public void registerMenu(final IBeaconModelView2 modelView){
+	public void registerModelToMenu(final IBeaconModelView2 modelView){
 		JMenuItem popItem = new JMenuItem(modelView.getName());
 		popItem.addActionListener(new ActionListener() {
 			@Override
@@ -116,6 +116,23 @@ public class SceneBackgroundPanel2 extends JPanel {
 					hideSN(modelView);
 				else
 					showSN(modelView);
+			}
+		});
+		popup.add(popItem);
+	}
+	
+	/**
+	 * 注册背景到界面
+	 * @param name
+	 * @param image
+	 */
+	public void registerBackGroundToMenu(String name, final Image image){
+		JMenuItem popItem = new JMenuItem(name);
+		popItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				backgroundImage = image;
+				repaint();
 			}
 		});
 		popup.add(popItem);
@@ -190,7 +207,7 @@ public class SceneBackgroundPanel2 extends JPanel {
 			}
 		});
 		
-		registerMenu(modelView);
+		registerModelToMenu(modelView);
 		add(modelView);
 		
 	}
@@ -216,9 +233,7 @@ public class SceneBackgroundPanel2 extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		ImageIcon imageIcon = new ImageIcon("images/background2.jpg");
-		Image image = imageIcon.getImage();
-		g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
+		g.drawImage(backgroundImage, 0, 0, panelWidth, panelHeight, null);
 	}
 
 }

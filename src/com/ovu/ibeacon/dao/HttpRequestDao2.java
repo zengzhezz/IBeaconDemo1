@@ -18,10 +18,13 @@ import com.ovu.ibeacon.utils.Utils;
  */
 public class HttpRequestDao2 {
 
+	//节点超时标志
 	private boolean timeOutFlag = false;
+	//定义从服务器获取的IBeaconList
 	private List<IBeaconModel> iBeaconList = new ArrayList<IBeaconModel>();
-	private List<IBeaconModel> transformList2 = new ArrayList<IBeaconModel>();
-	
+	//定义在报警范围内的IBeaconList
+	private List<IBeaconModel> transformList = new ArrayList<IBeaconModel>();
+	//每次从服务器获取数据，得到此时的系统时间
 	private int sysTime;
 
 	public interface DataOutOfRangeListener {
@@ -86,7 +89,7 @@ public class HttpRequestDao2 {
 					if(data.length()==0){
 						if (outOfRangeListener != null)
 							outOfRangeListener.getFar();
-					}else if (data.equals("0000000000ff")) { // 判断节点是否已经入网，正确传输数据
+					}else if (data.equals("00ffa80500ff")) { // 判断节点是否已经入网，正确传输数据
 						System.out.println("节点还没入网");
 					} else if (!timeOutFlag && data.length() != 0) {
 						// dataCount数据组数
@@ -105,36 +108,32 @@ public class HttpRequestDao2 {
 							ib.setUpdateTime(readTime);
 							iBeaconList.add(ib);
 						}
-						List<IBeaconModel> transformList = new ArrayList<IBeaconModel>();
+						//打印iBeaconList中的信息
+						printList(iBeaconList);
 						for (IBeaconModel iBeaconModel : iBeaconList) {
-							System.out.println("iBeaconList UUID=" + iBeaconModel.getUuid()
-											+ " RSSI=" + iBeaconModel.getRssi()
-											+ " Distance="
-											+ iBeaconModel.getDistance());
 							// 设置iBeacon报警阈值
 							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
-								transformList.add(iBeaconModel);
-								//判断是否修改transformList2中的数据
-								if(transformList2!=null && transformList2.size()!=0){
-									if(transformList2.contains(iBeaconModel)){
-										transformList2.set(transformList2.indexOf(iBeaconModel), iBeaconModel);
+								//如果transformList有此uuid的数据，则将此uuid的数据更新
+								if(transformList!=null && transformList.size()!=0){
+									if(transformList.contains(iBeaconModel)){
+										transformList.set(transformList.indexOf(iBeaconModel), iBeaconModel);
 									}else{
-										transformList2.add(iBeaconModel);
+										//如果没有此uuid的数据，则添加此数据
+										transformList.add(iBeaconModel);
 									}
 								}else{
-									transformList2.add(iBeaconModel);
+									//如果transformList为空，则只需要向里面添加数据
+									transformList.add(iBeaconModel);
 								}
 							}else{
-								transformList2.remove(iBeaconModel);
+								transformList.remove(iBeaconModel);
 							}
 						}
-						//打印transformList2信息
-						for (IBeaconModel iBeaconModel2 : transformList2) {
-							System.out.println("iBeaconModel2 UUID=" + iBeaconModel2.getUuid()
-									+ " RSSI=" + iBeaconModel2.getRssi()
-									+ " Distance="
-									+ iBeaconModel2.getDistance() + " updateTime=" + iBeaconModel2.getUpdateTime());
-						}
+						//删除掉transformList中超时的模块
+						modelFilter(transformList);
+						//打印transformList信息
+						System.out.println();
+						printList(transformList);
 						if (transformList != null && transformList.size() != 0) {
 							if (outOfRangeListener != null)
 								outOfRangeListener.getClose(transformList);
@@ -161,9 +160,27 @@ public class HttpRequestDao2 {
 	 * @param list
 	 */
 	public void modelFilter(List<IBeaconModel> list){
-		for (IBeaconModel iBeaconModel : list) {
-			if(sysTime - iBeaconModel.getUpdateTime() < 60){
-				list.remove(iBeaconModel);
+		if(list != null && list.size() != 0){
+			for (IBeaconModel iBeaconModel : list) {
+				//当此时系统时间和数据的更新时间查大于30s，则将此数据删掉
+				if(sysTime - iBeaconModel.getUpdateTime() > 30){
+					list.remove(iBeaconModel);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 打印list中的信息
+	 * @param list
+	 */
+	public void printList(List<IBeaconModel> list){
+		if(list!=null && list.size()!=0){
+			for (IBeaconModel iBeaconModel : list) {
+				System.out.println("iBeaconList UUID=" + iBeaconModel.getUuid()
+						+ " RSSI=" + iBeaconModel.getRssi()
+						+ " Distance="
+						+ iBeaconModel.getDistance() + " updateTime=" + iBeaconModel.getUpdateTime());
 			}
 		}
 	}

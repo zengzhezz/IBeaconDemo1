@@ -116,7 +116,7 @@ public class HttpRequestThread extends Thread{
 	}
 
 	public static void main(String[] args) {
-		HttpRequestThread htpDao = new HttpRequestThread(Utils.URL, Utils.PARAM14);
+		HttpRequestThread htpDao = new HttpRequestThread(Utils.URL, Utils.PARAM6C);
 		htpDao.start();
 		double distance = htpDao.calDistance(67);
 		System.out.println(distance);

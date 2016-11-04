@@ -116,7 +116,7 @@ public class HttpRequestDao {
 	}
 
 	public static void main(String[] args) {
-		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM14);
+		HttpRequestDao httpDao = new HttpRequestDao(Utils.URL, Utils.PARAM6C);
 	}
 
 	/**

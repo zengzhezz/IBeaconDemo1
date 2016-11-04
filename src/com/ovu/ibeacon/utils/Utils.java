@@ -2,13 +2,13 @@ package com.ovu.ibeacon.utils;
 
 public class Utils {
 	public final static String URL = "http://120.55.95.87/api//v1/application/data";
-	public final static String PARAM14 = "mac=AABBCC6666442214&token=123456789&appeui=0102030405060708";
-	public final static String PARAM15 = "mac=AABBCC6666442215&token=123456789&appeui=0102030405060708";
-	public final static String PARAM16 = "mac=AABBCC6666442216&token=123456789&appeui=0102030405060708";
-	public final static String PARAM17 = "mac=AABBCC6666442217&token=123456789&appeui=0102030405060708";
-	public final static String PARAM18 = "mac=AABBCC6666442218&token=123456789&appeui=0102030405060708";
-	public final static String PARAM19 = "mac=AABBCC6666442219&token=123456789&appeui=0102030405060708";
-	public final static String PARAM1A = "mac=AABBCC666644221a&token=123456789&appeui=0102030405060708";
+	public final static String PARAM6C = "mac=404C49680600026C&token=123456789&appeui=0102030405060708";
+	public final static String PARAM6D = "mac=404C49680600026D&token=123456789&appeui=0102030405060708";
+	public final static String PARAM6E = "mac=404C49680600026E&token=123456789&appeui=0102030405060708";
+	public final static String PARAM6F = "mac=404C49680600026F&token=123456789&appeui=0102030405060708";
+	public final static String PARAM70 = "mac=404C496806000270&token=123456789&appeui=0102030405060708";
+	public final static String PARAM71 = "mac=404C496806000271&token=123456789&appeui=0102030405060708";
+	public final static String PARAM72 = "mac=404C496806000272&token=123456789&appeui=0102030405060708";
 //	public final static String PARAM8 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
 //	public final static String PARAM9 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
 //	public final static String PARAM10 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";

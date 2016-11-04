@@ -35,7 +35,7 @@ public class IBeaconModelView2 extends JPanel {
 //		ibeaconList = new ArrayList<IBeaconModel>();
 		this.name = uuid;
 		setLayout(null);
-		setSize(200, 600);
+		setSize(200, 400);
 		// Ìí¼ÓÈý½ÇÐÎÍ¼Æ¬
 		traiView = new TraiangleView();
 		traiView.setBounds(0, 0, traiView.getWidth(), traiView.getHeight());
@@ -87,7 +87,7 @@ public class IBeaconModelView2 extends JPanel {
 				s.append("<html>");
 				for (IBeaconModel iBeaconModel : ibeaconList) {
 					s.append(iBeaconModel.getUuid() + " ");
-					s.append("Distance: " + String.format("%.2f", iBeaconModel.getDistance()) + "<br> ");
+					s.append("&nbsp Dis: " + String.format("%.2f", iBeaconModel.getDistance()) + "m<br> ");
 				}
 				s.append("</html>");
 				distanceLabel.setText(s.toString());
