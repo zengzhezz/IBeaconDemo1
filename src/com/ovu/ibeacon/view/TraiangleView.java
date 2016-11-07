@@ -17,15 +17,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.ovu.ibeacon.utils.Utils;
+
 public class TraiangleView extends JPanel {
-	
+		
 	private static double theta = 0;
 	private double radius = 0;
 	private boolean triggerFlag = false;
 	private int igwidth = 0;
 
 	public TraiangleView() {
-		setSize(200,200);
+		setSize(Utils.SN_WIDTH,Utils.SN_WIDTH);
 //		setBackground(Color.BLUE);
 		theta = Math.toRadians(theta);
 		createAnim();
@@ -39,8 +41,8 @@ public class TraiangleView extends JPanel {
 			public void run() {
 				setAngle(theta);
 				theta = theta + Math.PI / (180 * 2);
-				radius = radius + 0.8;
-				if(radius > 80)
+				radius = radius + 0.4;
+				if(radius > 50)
 					radius = igwidth / 2;
 			}		
 		};
@@ -60,26 +62,26 @@ public class TraiangleView extends JPanel {
 		//设置旋转动画
 		AffineTransform affineTransform=new AffineTransform();
 		//旋转角度theta, 旋转中心(100,100)
-		affineTransform.setToRotation(theta,100,100);
+		affineTransform.setToRotation(theta,Utils.SN_WIDTH/2,Utils.SN_WIDTH/2);
 		g2d.transform(affineTransform);
 
 		if(!triggerFlag){
 			//读取图片
-			ImageIcon imageIcon = new ImageIcon("images/triangle.png");
+			ImageIcon imageIcon = new ImageIcon("images/triangle_small.png");
 			Image image = imageIcon.getImage();
 			radius = imageIcon.getIconWidth() / 2;
 			//保存图片宽度信息
 			igwidth = imageIcon.getIconWidth();
-			g2d.drawImage(image, 100-imageIcon.getIconWidth()/2, 100-imageIcon.getIconHeight()/2, null);
+			g2d.drawImage(image, Utils.SN_WIDTH/2-imageIcon.getIconWidth()/2, Utils.SN_WIDTH/2-imageIcon.getIconHeight()/2, null);
 		}else{
 			//读取图片
-			ImageIcon imageIcon = new ImageIcon("images/triangle2.png");
+			ImageIcon imageIcon = new ImageIcon("images/triangle2_small.png");
 			Image image = imageIcon.getImage();
 			//保存图片宽度信息
 			igwidth = imageIcon.getIconWidth();
-			g2d.drawImage(image, 100-imageIcon.getIconWidth()/2, 100-imageIcon.getIconHeight()/2, null);
+			g2d.drawImage(image, Utils.SN_WIDTH/2-imageIcon.getIconWidth()/2, Utils.SN_WIDTH/2-imageIcon.getIconHeight()/2, null);
 			//画椭圆
-			Rectangle2D rect = new Rectangle2D.Double(100-radius, 100-radius, radius * 2, radius * 2);
+			Rectangle2D rect = new Rectangle2D.Double(Utils.SN_WIDTH/2-radius, Utils.SN_WIDTH/2-radius, radius * 2, radius * 2);
 			Ellipse2D ellipse = new Ellipse2D.Double();
 			ellipse.setFrame(rect);
 			g2d.setStroke(new BasicStroke(5f,BasicStroke.CAP_ROUND,BasicStroke.JOIN_MITER));
@@ -116,7 +118,7 @@ public class TraiangleView extends JPanel {
 	
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(200, 200);
+		return new Dimension(Utils.SN_WIDTH, Utils.SN_WIDTH);
 	}
 	
 }

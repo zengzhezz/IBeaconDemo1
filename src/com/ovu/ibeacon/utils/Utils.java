@@ -13,6 +13,10 @@ public class Utils {
 //	public final static String PARAM9 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
 //	public final static String PARAM10 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
 	
+	public final static int SN_WIDTH = 160;
+	
+	public final static int FONT_SIZE = 14;
+	
 	//IbeaconÃû³ÆÊý×é
 	public final static String[] Beacon_UUID= {
 		"00000001", "00000002","00000003","00000004","00000005","00000006","00000007","00000008","00000009"

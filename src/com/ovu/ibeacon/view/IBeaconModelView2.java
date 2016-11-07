@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 import com.ovu.ibeacon.model.IBeaconModel;
+import com.ovu.ibeacon.utils.Utils;
 
 /**
  * 以节点SN为参照点不动，测每个Beacon相对于节点的距离
@@ -35,16 +36,16 @@ public class IBeaconModelView2 extends JPanel {
 //		ibeaconList = new ArrayList<IBeaconModel>();
 		this.name = uuid;
 		setLayout(null);
-		setSize(200, 400);
+		setSize(Utils.SN_WIDTH, Utils.SN_WIDTH*2);
 		// 添加三角形图片
 		traiView = new TraiangleView();
 		traiView.setBounds(0, 0, traiView.getWidth(), traiView.getHeight());
 		add(traiView);
 		// 添加名字标签
 		JLabel nameLabel = new JLabel(getName(), JLabel.CENTER);
-		nameLabel.setBounds(0, traiView.getHeight() - 65, traiView.getWidth(),
+		nameLabel.setBounds(0, traiView.getHeight()*3/5, traiView.getWidth(),
 				20);
-		nameLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+		nameLabel.setFont(new Font(Font.DIALOG, Font.BOLD, Utils.FONT_SIZE));
 		add(nameLabel);
 		
 		setBackground(Color.RED);
@@ -57,7 +58,7 @@ public class IBeaconModelView2 extends JPanel {
 //		distanceLabel.setBounds(0, traiView.getHeight(), traiView.getWidth(),
 //				180);
 		// 设置字体
-		distanceLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+		distanceLabel.setFont(new Font(Font.DIALOG, Font.BOLD, Utils.FONT_SIZE));
 		// 设置背景白色
 		distanceLabel.setBackground(Color.WHITE);
 		// 设置边框黑色
@@ -82,7 +83,7 @@ public class IBeaconModelView2 extends JPanel {
 		if(!timeOut){
 			if(null != ibeaconList && ibeaconList.size() != 0){
 				distanceLabel.setVisible(true);
-				distanceLabel.setBounds(0, traiView.getHeight()-18, traiView.getWidth(), ibeaconList.size() * 25);
+				distanceLabel.setBounds(0, traiView.getHeight()-18, traiView.getWidth(), ibeaconList.size() * (Utils.FONT_SIZE + 9));
 				StringBuilder s = new StringBuilder();
 				s.append("<html>");
 				for (IBeaconModel iBeaconModel : ibeaconList) {
@@ -116,7 +117,7 @@ public class IBeaconModelView2 extends JPanel {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(200, 400);
+		return new Dimension(Utils.SN_WIDTH, Utils.SN_WIDTH*2);
 	}
 
 	/**

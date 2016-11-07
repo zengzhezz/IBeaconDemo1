@@ -73,15 +73,15 @@ public class HttpRequestDao2 {
 					//计算读取的节点数据时间，单位s
 					int readTime = Integer.parseInt(last_update_time.substring(8, 10)) * 60 * 60 + Integer.parseInt(last_update_time.substring(10, 12)) * 60 + Integer.parseInt(last_update_time.substring(12, 14));
 					if (timeOutFlag == false) {
-						//时间差大于80s, 判断为超时
-						if (day > Integer.parseInt(last_update_time.substring(6, 8)) ||(sysTime - readTime) >= 80) {
+						//时间差大于17s, 判断为超时
+						if (day > Integer.parseInt(last_update_time.substring(6, 8)) ||(sysTime - readTime) >= 17) {
 							timeOutFlag = true;
 							System.out.println(jsonObj.getString("mac") + "超时");
 							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
 						}
 					} else {
-						//时间差小于80s并且在同一天, 未超时，正常显示
-						if (sysTime - readTime < 80 && day == Integer.parseInt(last_update_time.substring(6, 8))) {
+						//时间差小于17s并且在同一天, 未超时，正常显示
+						if (sysTime - readTime < 17 && day == Integer.parseInt(last_update_time.substring(6, 8))) {
 							timeOutFlag = false;
 							outOfRangeListener.timeOut(timeOutFlag, last_update_time);
 						}
@@ -89,7 +89,7 @@ public class HttpRequestDao2 {
 					if(data.length()==0){
 						if (outOfRangeListener != null)
 							outOfRangeListener.getFar();
-					}else if (data.equals("00ffa80500ff")) { // 判断节点是否已经入网，正确传输数据
+					} else if (!data.substring(0, 4).equals("aa55")) { // 判断节点是否已经入网，正确传输数据
 						System.out.println("节点还没入网");
 					} else if (!timeOutFlag && data.length() != 0) {
 						// dataCount数据组数
@@ -112,25 +112,30 @@ public class HttpRequestDao2 {
 						printList(iBeaconList);
 						for (IBeaconModel iBeaconModel : iBeaconList) {
 							// 设置iBeacon报警阈值
+//							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
+//								//如果transformList有此uuid的数据，则将此uuid的数据更新
+//								if(transformList!=null && transformList.size()!=0){
+//									if(transformList.contains(iBeaconModel)){
+//										transformList.set(transformList.indexOf(iBeaconModel), iBeaconModel);
+//									}else{
+//										//如果没有此uuid的数据，则添加此数据
+//										transformList.add(iBeaconModel);
+//									}
+//								}else{
+//									//如果transformList为空，则只需要向里面添加数据
+//									transformList.add(iBeaconModel);
+//								}
+//							}else{
+//								transformList.remove(iBeaconModel);
+//							}
+							
 							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
-								//如果transformList有此uuid的数据，则将此uuid的数据更新
-								if(transformList!=null && transformList.size()!=0){
-									if(transformList.contains(iBeaconModel)){
-										transformList.set(transformList.indexOf(iBeaconModel), iBeaconModel);
-									}else{
-										//如果没有此uuid的数据，则添加此数据
-										transformList.add(iBeaconModel);
-									}
-								}else{
-									//如果transformList为空，则只需要向里面添加数据
-									transformList.add(iBeaconModel);
-								}
-							}else{
-								transformList.remove(iBeaconModel);
+								transformList.add(iBeaconModel);
 							}
+							
 						}
 						//删除掉transformList中超时的模块
-						modelFilter(transformList);
+//						modelFilter(transformList);
 						//打印transformList信息
 						System.out.println();
 						printList(transformList);
@@ -142,6 +147,7 @@ public class HttpRequestDao2 {
 								outOfRangeListener.getFar();
 						}
 						iBeaconList.clear();
+						transformList.clear();
 						System.out
 								.println("--------------打印此组数据结束-----------------");
 						System.out.println();
@@ -161,12 +167,17 @@ public class HttpRequestDao2 {
 	 */
 	public void modelFilter(List<IBeaconModel> list){
 		if(list != null && list.size() != 0){
-			for (IBeaconModel iBeaconModel : list) {
+			for(int i = 0; i < list.size()-1; i++){
 				//当此时系统时间和数据的更新时间查大于30s，则将此数据删掉
-				if(sysTime - iBeaconModel.getUpdateTime() > 30){
-					list.remove(iBeaconModel);
+				if(sysTime - list.get(i).getUpdateTime() > 15){
+					list.remove(i);
 				}
 			}
+//			for (IBeaconModel iBeaconModel : list) {
+//				if(sysTime - iBeaconModel.getUpdateTime() > 30){
+//					list.remove(iBeaconModel);
+//				}
+//			}
 		}
 	}
 	
