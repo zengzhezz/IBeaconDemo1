@@ -8,10 +8,7 @@ public class Utils {
 	public final static String PARAM6F = "mac=404C49680600026F&token=123456789&appeui=0102030405060708";
 	public final static String PARAM70 = "mac=404C496806000270&token=123456789&appeui=0102030405060708";
 	public final static String PARAM71 = "mac=404C496806000271&token=123456789&appeui=0102030405060708";
-	public final static String PARAM72 = "mac=404C496806000272&token=123456789&appeui=0102030405060708";
-//	public final static String PARAM8 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
-//	public final static String PARAM9 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
-//	public final static String PARAM10 = "mac=AABBCC6666442214&token=70B3D5FFFE88B03A&appeui=0102030405060708";
+	public final static String PARAM74 = "mac=404C496806000274&token=123456789&appeui=0102030405060708";
 	
 	public final static int SN_WIDTH = 160;
 	
@@ -19,7 +16,7 @@ public class Utils {
 	
 	//IbeaconÃû³ÆÊý×é
 	public final static String[] Beacon_UUID= {
-		"00000001", "00000002","00000003","00000004","00000005","00000006","00000007","00000008","00000009"
+		"000b"
 	};
 	
 	/**

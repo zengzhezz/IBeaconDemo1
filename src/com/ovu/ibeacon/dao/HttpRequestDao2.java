@@ -89,24 +89,25 @@ public class HttpRequestDao2 {
 					if(data.length()==0){
 						if (outOfRangeListener != null)
 							outOfRangeListener.getFar();
-					} else if (!data.substring(0, 4).equals("aa55")) { // 判断节点是否已经入网，正确传输数据
+					} else if (!data.substring(0, 2).equals("01")) { // 判断节点是否已经入网，正确传输数据
 						System.out.println("节点还没入网");
 					} else if (!timeOutFlag && data.length() != 0) {
 						// dataCount数据组数
 						String dataCount = data.substring(4, 6);
 						// 得到除去数据头的有效数据字符串dataWithoutHead
-						String dataWithoutHead = data.substring(8,
-								data.length());
-						for (int i = 0; i < dataWithoutHead.length(); i = i + 10) {
-							String data10 = dataWithoutHead
-									.substring(i, i + 10);
-							IBeaconModel ib = new IBeaconModel();
-							ib.setUuid(data10.substring(0, 8));
-							ib.setRssi(data10.substring(8));
-							ib.setDistance(calDistance(Integer.parseInt(
-									ib.getRssi(), 16)));
-							ib.setUpdateTime(readTime);
-							iBeaconList.add(ib);
+						String dataWithoutHead = data.substring(6);
+						for (int i = 0; i < dataWithoutHead.length(); i = i + 6) {
+							
+							// 取出一组beacon数据
+							String tempData = dataWithoutHead.substring(i, i + 6);
+							IBeaconModel beacon = new IBeaconModel();
+							beacon.setUuid(tempData.substring(0, 4));
+							// distance是一个2字节16进制数，如11表示1.7m
+							String distance = tempData.substring(4);
+							beacon.setDistance((double) Integer.parseInt(
+									distance, 16) / 10);
+							iBeaconList.add(beacon);
+							
 						}
 						//打印iBeaconList中的信息
 						printList(iBeaconList);
@@ -129,7 +130,7 @@ public class HttpRequestDao2 {
 //								transformList.remove(iBeaconModel);
 //							}
 							
-							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
+							if (iBeaconModel.getDistance() < 3 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
 								transformList.add(iBeaconModel);
 							}
 							
