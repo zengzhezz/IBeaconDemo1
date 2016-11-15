@@ -51,8 +51,6 @@ public class HttpRequestDao2 {
 				String data = null;
 				HttpRequest hr = new HttpRequest();
 				String s = hr.sendGet(url, param);
-				// System.out.println(s);
-				// s = formatString(s);
 				System.out.println("--------------开始打印一组数据-----------------");
 				System.out.println(s);
 				try {
@@ -92,8 +90,6 @@ public class HttpRequestDao2 {
 					} else if (!data.substring(0, 2).equals("01")) { // 判断节点是否已经入网，正确传输数据
 						System.out.println("节点还没入网");
 					} else if (!timeOutFlag && data.length() != 0) {
-						// dataCount数据组数
-						String dataCount = data.substring(4, 6);
 						// 得到除去数据头的有效数据字符串dataWithoutHead
 						String dataWithoutHead = data.substring(6);
 						for (int i = 0; i < dataWithoutHead.length(); i = i + 6) {
@@ -106,40 +102,20 @@ public class HttpRequestDao2 {
 							String distance = tempData.substring(4);
 							beacon.setDistance((double) Integer.parseInt(
 									distance, 16) / 10);
+							beacon.setUpdateTime(readTime);
 							iBeaconList.add(beacon);
 							
 						}
 						//打印iBeaconList中的信息
 						printList(iBeaconList);
+						//过滤3m之外和不在uuid数组内的数据
 						for (IBeaconModel iBeaconModel : iBeaconList) {
-							// 设置iBeacon报警阈值
-//							if (iBeaconModel.getDistance() < 10 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
-//								//如果transformList有此uuid的数据，则将此uuid的数据更新
-//								if(transformList!=null && transformList.size()!=0){
-//									if(transformList.contains(iBeaconModel)){
-//										transformList.set(transformList.indexOf(iBeaconModel), iBeaconModel);
-//									}else{
-//										//如果没有此uuid的数据，则添加此数据
-//										transformList.add(iBeaconModel);
-//									}
-//								}else{
-//									//如果transformList为空，则只需要向里面添加数据
-//									transformList.add(iBeaconModel);
-//								}
-//							}else{
-//								transformList.remove(iBeaconModel);
-//							}
 							
-							if (iBeaconModel.getDistance() < 3 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
+							if (iBeaconModel.getDistance() < 1 && Utils.hasThisUUID(iBeaconModel.getUuid())) {
 								transformList.add(iBeaconModel);
 							}
 							
 						}
-						//删除掉transformList中超时的模块
-//						modelFilter(transformList);
-						//打印transformList信息
-						System.out.println();
-						printList(transformList);
 						if (transformList != null && transformList.size() != 0) {
 							if (outOfRangeListener != null)
 								outOfRangeListener.getClose(transformList);
@@ -158,12 +134,12 @@ public class HttpRequestDao2 {
 				}
 			}
 		};
-		// 3s执行一次
-		timer.schedule(task, 0, 5000);
+		// 1s执行一次
+		timer.schedule(task, 0, 1000);
 	}
 	
 	/**
-	 * 节点过滤器，把两次都不传数据的节点过滤掉
+	 * 节点过滤器，把15s都不传数据的beacon过滤掉
 	 * @param list
 	 */
 	public void modelFilter(List<IBeaconModel> list){
@@ -174,11 +150,6 @@ public class HttpRequestDao2 {
 					list.remove(i);
 				}
 			}
-//			for (IBeaconModel iBeaconModel : list) {
-//				if(sysTime - iBeaconModel.getUpdateTime() > 30){
-//					list.remove(iBeaconModel);
-//				}
-//			}
 		}
 	}
 	
