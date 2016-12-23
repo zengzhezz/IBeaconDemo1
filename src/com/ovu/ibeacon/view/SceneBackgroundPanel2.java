@@ -62,12 +62,12 @@ public class SceneBackgroundPanel2 extends JPanel {
 	 * 初始化节点
 	 */
 	public void initModels() {
-//		modelView6C = new IBeaconModelView2("SN6C"); modelView6C.setBounds(400, 50, modelView6C.getWidth(), modelView6C.getHeight());
+		modelView6C = new IBeaconModelView2("SN6C"); modelView6C.setBounds(400, 50, modelView6C.getWidth(), modelView6C.getHeight());
 //		modelView6D = new IBeaconModelView2("SN6D"); modelView6D.setBounds(700, 50, modelView6D.getWidth(), modelView6D.getHeight());
 //		modelView6E = new IBeaconModelView2("SN6E"); modelView6E.setBounds(500, 50, modelView6E.getWidth(), modelView6E.getHeight());
 //		modelView6F = new IBeaconModelView2("SN6F"); modelView6F.setBounds(1300, 50, modelView6F.getWidth(), modelView6F.getHeight());
 //		modelView70 = new IBeaconModelView2("SN70"); modelView70.setBounds(550, 620, modelView70.getWidth(), modelView70.getHeight());
-		modelView74 = new IBeaconModelView2("SN74"); modelView74.setBounds(550, 620, modelView74.getWidth(), modelView74.getHeight());
+//		modelView74 = new IBeaconModelView2("SN74"); modelView74.setBounds(550, 620, modelView74.getWidth(), modelView74.getHeight());
 			
 	}
 
@@ -78,12 +78,12 @@ public class SceneBackgroundPanel2 extends JPanel {
 		setSize(panelWidth, panelHeight);
 		initModels();
 		initMemu();
-//		registerSN(modelView6C, Utils.URL, Utils.PARAM6C);
+		registerSN(modelView6C, Utils.URL, Utils.PARAM6C);
 //		registerSN(modelView6D, Utils.URL, Utils.PARAM6D);
 //		registerSN(modelView6E, Utils.URL, Utils.PARAM6E);
 //		registerSN(modelView6F, Utils.URL, Utils.PARAM6F);
 //		registerSN(modelView70, Utils.URL, Utils.PARAM70);
-		registerSN(modelView74, Utils.URL, Utils.PARAM74);
+//		registerSN(modelView74, Utils.URL, Utils.PARAM74);
 		
 		registerBackGroundToMenu("研发区",new ImageIcon("images/background.jpg").getImage());
 		registerBackGroundToMenu("公司",new ImageIcon("images/background2.jpg").getImage());

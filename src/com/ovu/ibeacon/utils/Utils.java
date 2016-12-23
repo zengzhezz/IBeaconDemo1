@@ -2,7 +2,7 @@ package com.ovu.ibeacon.utils;
 
 public class Utils {
 	public final static String URL = "http://120.55.95.87/api//v1/application/data";
-	public final static String PARAM6C = "mac=404C49680600026C&token=123456789&appeui=0102030405060708";
+	public final static String PARAM6C = "mac=004A770124000208&token=123456789&appeui=0102030405060708";
 	public final static String PARAM6D = "mac=404C49680600026D&token=123456789&appeui=0102030405060708";
 	public final static String PARAM6E = "mac=404C49680600026E&token=123456789&appeui=0102030405060708";
 	public final static String PARAM6F = "mac=404C49680600026F&token=123456789&appeui=0102030405060708";
@@ -16,7 +16,7 @@ public class Utils {
 	
 	//IbeaconÃû³ÆÊý×é
 	public final static String[] Beacon_UUID= {
-		"000b"
+		"000a"
 	};
 	
 	/**
